@@ -15,6 +15,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
         passwordcheck = request.form['passwordcheck']
+        email = request.form['email']
         db = get_db()
         error = None
 
@@ -26,16 +27,18 @@ def register():
             error = 'Contraseña incorrecta.'
         elif passwordcheck != password:
             error = 'Las contraseñas no coinciden.'
+        elif not email:
+            error = 'Inserte una direccion de mail'
 
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
+                    "INSERT INTO user (username, password, email) VALUES (?, ?, ?)",
+                    (username, generate_password_hash(password), email),
                 )
                 db.commit()
             except db.IntegrityError:
-                error = f"El usuario {username} ya esta registrado."
+                error = f"El usuario {username} o la direccion de mail {email} ya estan en uso."
             else:
                 return redirect(url_for("auth.login"))
 

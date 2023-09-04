@@ -12,7 +12,7 @@ bp = Blueprint('blog', __name__)
 def index():
     db = get_db()
     posts = db.execute(
-        'SELECT p.id, title, body, created, author_id, username'
+        'SELECT p.id, title, body, created, author_id, username, u.email'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
@@ -27,7 +27,7 @@ def create():
         error = None
 
         if not title:
-            error = 'Title is required.'
+            error = 'Inserte un titulo.'
 
         if error is not None:
             flash(error)
@@ -45,14 +45,14 @@ def create():
 
 def get_post(id, check_author=True):
     post = get_db().execute(
-        'SELECT p.id, title, body, created, author_id, username'
+        'SELECT p.id, title, body, created, author_id, username, email'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.id = ?',
-        (id,)
+        (id, g.email,)
     ).fetchone()
 
     if post is None:
-        abort(404, f"Post id {id} doesn't exist.")
+        abort(404, f"El numero de posteo {id} no existe.")
 
     if check_author and post['author_id'] != g.user['id']:
         abort(403)
@@ -70,7 +70,7 @@ def update(id):
         error = None
 
         if not title:
-            error = 'Title is required.'
+            error = 'Inserte un titulo.'
 
         if error is not None:
             flash(error)
