@@ -22,13 +22,13 @@ def register():
         if not username:
             error = 'Inserte nombre de usuario.'
         elif not password:
-            error = 'Inserte una contraseña.'
+            error = 'Inserte una contrasena.'
         elif not passwordcheck:
-            error = 'Contraseña incorrecta.'
+            error = 'Contrasena incorrecta.'
         elif passwordcheck != password:
-            error = 'Las contraseñas no coinciden.'
+            error = 'Las contrasenas no coinciden.'
         elif not email:
-            error = 'Inserte una direccion de mail'
+            error = 'Inserte una direccion de mail.'
 
         if error is None:
             try:
@@ -60,7 +60,7 @@ def login():
         if user is None:
             error = 'Nombre de usuario incorrecto.'
         elif not check_password_hash(user['password'], password):
-            error = 'Contraseña incorrecta.'
+            error = 'Contrasena incorrecta.'
 
         if error is None:
             session.clear()
